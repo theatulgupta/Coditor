@@ -1,45 +1,40 @@
 "use client";
 
 import Logo from "@/components/Logo";
+import TypingAnimation from "@/components/TypingAnimation";
 import { Button } from "@/components/ui/button";
 import Image from "next/image";
+import { useRouter } from "next/navigation";
 import React from "react";
-import { TypeAnimation } from "react-type-animation";
 
 const Home = () => {
+  const router = useRouter();
   return (
     <div className="min-h-screen bg-gradient-to-b from-white via-white to-blue-100 overflow-hidden">
       <div className="container px-4 mx-auto">
         <header className="h-20 flex items-center justify-between gap-4">
-          <Logo width={120} height={50} />
+          <Logo />
           <nav>
-            <Button className="cursor-pointer">Login</Button>
+            <Button
+              onClick={() => router.push("/login")}
+              className="cursor-pointer text-lg px-4 py-2 font-semibold"
+            >
+              Login
+            </Button>
           </nav>
         </header>
 
         {/* Hero Section */}
         <main className="flex flex-col items-center justify-center min-h-[75vh] ">
           {/* Typing Animation Text */}
-          <div className="flex flex-col gap-5 px-4 text-center font-bold text-5xl md:text-6xl lg:text-7xl">
-            <h1 className="text-primary">Build Space</h1>
-            <div className="mx-auto">
-              <TypeAnimation
-                sequence={[
-                  "Code Smarter.",
-                  1500,
-                  "Powered by AI.",
-                  1500,
-                  "Collaborate in Real-Time.",
-                  1500,
-                  "Welcome to Coditor.",
-                  1500,
-                ]}
-                wrapper="span"
-                speed={50}
-                repeat={Infinity}
-              />
-            </div>
-          </div>
+          <TypingAnimation
+            phrases={[
+              "Code Smarter.",
+              "Powered by AI.",
+              "Collaborate in Real-Time.",
+              "Welcome to Coditor.",
+            ]}
+          />
 
           {/* Landing Image */}
           <div className="mt-10 mx-auto">
