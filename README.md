@@ -1,36 +1,90 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# ⚡ Coditor — AI-Enabled Online Code Editor & Tester
 
-## Getting Started
+Coditor is a powerful online code editor and compiler built with **Next.js**, offering a seamless coding experience with instant feedback. It supports multiple languages and is designed to help developers write, run, and test code effortlessly—anytime, anywhere.
 
-First, run the development server:
+---
+
+## 🚀 Features
+
+- ✨ Beautiful and minimal UI
+- 🧠 AI-powered code assistance (coming soon)
+- 🛠 Live code editor with real-time syntax highlighting
+- 💻 Multi-language support (C, C++, Python, JavaScript, etc.)
+- 🔍 Instant code execution and output preview
+- 🌙 Dark mode support
+- 🔐 User authentication and account management
+
+---
+
+## 🛠 Tech Stack
+
+- **Framework**: [Next.js](https://nextjs.org)
+- **Styling**: Tailwind CSS
+- **Backend**: Node.js, Express (via API routes)
+- **Database**: MongoDB + Mongoose
+- **Authentication**: JWT + bcrypt
+- **Editor Engine**: Monaco Editor / CodeMirror
+
+---
+
+## 📦 Getting Started
+
+Install dependencies:
+
+```bash
+npm install
+# or
+yarn install
+```
+
+Run the development server:
 
 ```bash
 npm run dev
 # or
 yarn dev
-# or
-pnpm dev
-# or
-bun dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+Visit [http://localhost:3000](http://localhost:3000) to explore the app.
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+---
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+## 📁 Project Structure
 
-## Learn More
+```
+coditor/
+├── app/               # App router pages & layouts
+├── components/        # Reusable UI components
+├── lib/               # Utility functions and helpers
+├── models/            # Mongoose models
+├── styles/            # Global styles
+└── public/            # Static assets
+```
 
-To learn more about Next.js, take a look at the following resources:
+---
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+## 🌐 Live Demo
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+> Coming soon on [https://coditor.dev](https://coditor.dev)
 
-## Deploy on Vercel
+---
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+## 🤝 Contributing
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+We welcome contributions! If you'd like to contribute:
+
+1. Fork the repo
+2. Create your feature branch: `git checkout -b my-feature`
+3. Commit your changes: `git commit -m 'Add new feature'`
+4. Push to the branch: `git push origin my-feature`
+5. Open a pull request
+
+---
+
+## 📄 License
+
+Licensed under the MIT License. See `LICENSE` for more information.
+
+---
+
+Made with ❤️ by Atul Gupta
