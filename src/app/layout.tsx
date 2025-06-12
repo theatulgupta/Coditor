@@ -1,5 +1,8 @@
+"use client";
+
 import type { Metadata } from "next";
 import { Alumni_Sans } from "next/font/google";
+import { Toaster } from "react-hot-toast";
 import "./globals.css";
 
 const alumniSans = Alumni_Sans({
@@ -9,7 +12,7 @@ const alumniSans = Alumni_Sans({
   display: "swap",
 });
 
-export const metadata: Metadata = {
+const metadata: Metadata = {
   title: "Coditor",
   description: "AI Enabled Online Code Editor",
 };
@@ -23,6 +26,7 @@ export default function RootLayout({
     <html lang="en">
       <body className={`${alumniSans.variable} antialiased font-sans`}>
         {children}
+        <Toaster position="bottom-right" />
       </body>
     </html>
   );

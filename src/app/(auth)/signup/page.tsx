@@ -15,6 +15,9 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { useState } from "react";
 import Link from "next/link";
+import Axios from "@/lib/Axios";
+import { useRouter } from "next/navigation";
+import { toast } from "react-hot-toast";
 
 const passwordValidation = z
   .string({ message: "Password is required" })
@@ -56,14 +59,27 @@ const SignUp = () => {
   });
 
   const [isLoading, setIsLoading] = useState(false);
+  const router = useRouter();
 
-  // Submit Handler
-  function onSubmit(values: z.infer<typeof formSchema>) {
-    console.log(values);
+  // Submit Handlers
+  async function onSubmit(values: z.infer<typeof formSchema>) {
     setIsLoading(true);
-    setTimeout(() => {
+    try {
+      const payload = {
+        name: values.name,
+        email: values.email,
+        password: values.password,
+      };
+
+      await Axios.post("/api/auth/signup", payload);
+
+      toast.success("Account created!");
+      router.push("/login");
+    } catch (error: any) {
+      toast.error(error?.response?.data?.error || "Something went wrong");
+    } finally {
       setIsLoading(false);
-    }, 3000);
+    }
   }
 
   return (
