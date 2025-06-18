@@ -15,7 +15,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { useState } from "react";
 import Link from "next/link";
-import Axios from "@/lib/Axios";
+import { signIn } from "next-auth/react";
 import { toast } from "react-hot-toast";
 import { useRouter } from "next/navigation";
 
@@ -45,19 +45,20 @@ const Login = () => {
   const onSubmit = async (values: z.infer<typeof loginSchema>) => {
     setIsLoading(true);
     try {
-      const payload = {
+      const res = await signIn("credentials", {
+        redirect: false,
         email: values.email,
         password: values.password,
-      };
+      });
 
-      const response = await Axios.post("/api/auth/login", payload);
-
-      toast.success(response.data.message || "Logged in successfully");
-      router.push("/dashboard");
-    } catch (error: any) {
-      toast.error(
-        error?.response?.data?.error || "Failed to login. Please try again."
-      );
+      if (res?.error) {
+        toast.error(res.error || "Invalid credentials");
+      } else {
+        toast.success("Logged in successfully");
+        router.push("/dashboard");
+      }
+    } catch (error) {
+      toast.error("Login failed. Try again.");
     } finally {
       setIsLoading(false);
     }
