@@ -19,16 +19,20 @@ export async function POST(req: NextRequest) {
     await connectDB();
 
     const user = await User.findOne({ email });
-    console.log("User found:", user);
+    console.log("User found:", user ? user.email : null);
 
     if (!user) {
+      console.log("No user found with this email");
       return NextResponse.json(
         { error: "Invalid email or password" },
         { status: 401 }
       );
     }
 
+    console.log("Comparing passwords");
     const isMatch = await bcrypt.compare(password, user.password);
+    console.log("Password match result:", isMatch);
+
     if (!isMatch) {
       return NextResponse.json(
         { error: "Invalid email or password" },

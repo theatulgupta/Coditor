@@ -112,6 +112,16 @@ const Login = () => {
               </FormItem>
             )}
           />
+
+          <p className="text-right text-sm">
+            <Link
+              href="/forgot-password"
+              className="text-primary hover:underline font-medium"
+            >
+              Forgot Password?
+            </Link>
+          </p>
+
           <Button
             disabled={isLoading}
             className="w-full cursor-pointer"

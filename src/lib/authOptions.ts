@@ -18,14 +18,23 @@ export const authOptions: NextAuthOptions = {
         }
 
         await connectDB();
+
         const user = await User.findOne({ email: credentials.email });
-        if (!user) return null;
+
+        if (!user) {
+          // Optionally log or throw error for invalid login
+          return null;
+        }
 
         const passwordMatches = await bcrypt.compare(
           credentials.password,
           user.password
         );
-        if (!passwordMatches) return null;
+
+        if (!passwordMatches) {
+          // Optionally log or throw error for invalid login
+          return null;
+        }
 
         return {
           id: user._id.toString(),

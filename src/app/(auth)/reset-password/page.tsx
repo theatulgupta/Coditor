@@ -5,7 +5,6 @@ import { useForm } from "react-hook-form";
 import {
   Form,
   FormControl,
-  FormDescription,
   FormField,
   FormItem,
   FormLabel,
@@ -13,10 +12,10 @@ import {
 } from "@/components/ui/form";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { useState } from "react";
+import { useState, useCallback, useEffect } from "react";
 import Link from "next/link";
 import Axios from "@/lib/Axios";
-import { useRouter } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 import { toast } from "react-hot-toast";
 
 const passwordValidation = z
@@ -32,12 +31,6 @@ const passwordValidation = z
 
 export const formSchema = z
   .object({
-    name: z.string().min(3, "Name must be at least 3 characters long"),
-    email: z
-      .string({ message: "Email is required" })
-      .email("Invalid email format")
-      .min(5)
-      .max(50),
     password: passwordValidation,
     confirmPassword: z.string({ message: "Confirm password is required" }),
   })
@@ -46,13 +39,10 @@ export const formSchema = z
     path: ["confirmPassword"],
   });
 
-// UI placeholder
-const SignUp = () => {
+const ResetPassword = () => {
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
-      name: "",
-      email: "",
       password: "",
       confirmPassword: "",
     },
@@ -60,85 +50,60 @@ const SignUp = () => {
 
   const [isLoading, setIsLoading] = useState(false);
   const router = useRouter();
+  const searchParams = useSearchParams();
 
-  // Submit Handlers
-  async function onSubmit(values: z.infer<typeof formSchema>) {
+  // Redirect if no token found
+  useEffect(() => {
+    const token = searchParams.get("token");
+    if (!token) {
+      toast.error("Missing reset token. Please request a new reset link.");
+      router.replace("/forgot-password");
+    }
+  }, [searchParams, router]);
+
+  const onSubmit = useCallback(async () => {
     setIsLoading(true);
     try {
-      const payload = {
-        name: values.name,
-        email: values.email,
-        password: values.password,
-      };
+      const token = searchParams.get("token");
+      if (!token) {
+        // This is an additional safety check
+        toast.error("Missing or invalid reset token.");
+        setIsLoading(false);
+        return;
+      }
 
-      await Axios.post("/api/auth/signup", payload);
+      const password = form.getValues("password");
+      const payload = { password };
 
-      toast.success("Account created!");
+      await Axios.post(`/api/auth/reset-password?token=${token}`, payload);
+
+      toast.success("Password reset successful!");
       router.push("/login");
     } catch (error: any) {
-      console.error("Signup error:", error);
+      console.error("Reset password error:", error);
       toast.error(error?.response?.data?.error || "Something went wrong");
     } finally {
       setIsLoading(false);
     }
-  }
+  }, [form, router, searchParams]);
 
   return (
     <div className="p-10 w-full space-y-7">
-      <h1 className="text-2xl font-semibold text-center">Create Account</h1>
+      <h1 className="text-2xl font-semibold text-center">Reset Password</h1>
       <Form {...form}>
         <form
           onSubmit={form.handleSubmit(onSubmit)}
-          className="space-y-4 max-w-md mx-auto "
+          className="space-y-4 max-w-md mx-auto"
         >
-          <FormField
-            control={form.control}
-            name="name"
-            render={({ field }) => (
-              <FormItem>
-                <FormLabel>Name</FormLabel>
-                <FormControl>
-                  <Input
-                    disabled={isLoading}
-                    type="text"
-                    className="w-full"
-                    placeholder="John Doe"
-                    {...field}
-                  />
-                </FormControl>
-                <FormMessage />
-              </FormItem>
-            )}
-          />
-          <FormField
-            control={form.control}
-            name="email"
-            render={({ field }) => (
-              <FormItem>
-                <FormLabel>Email</FormLabel>
-                <FormControl>
-                  <Input
-                    disabled={isLoading}
-                    className="w-full"
-                    type="email"
-                    placeholder="example@email.com"
-                    {...field}
-                  />
-                </FormControl>
-                <FormMessage />
-              </FormItem>
-            )}
-          />
           <FormField
             control={form.control}
             name="password"
             render={({ field }) => (
               <FormItem>
-                <FormLabel>Password</FormLabel>
+                <FormLabel>New Password</FormLabel>
                 <FormControl>
                   <Input
                     disabled={isLoading}
-                    className="w-full"
                     type="password"
                     placeholder="Type a strong password"
                     {...field}
@@ -156,7 +121,6 @@ const SignUp = () => {
                 <FormLabel>Confirm Password</FormLabel>
                 <FormControl>
                   <Input
-                    className="w-full"
                     disabled={isLoading}
                     type="password"
                     placeholder="Retype your password"
@@ -167,23 +131,18 @@ const SignUp = () => {
               </FormItem>
             )}
           />
-          <Button
-            disabled={isLoading}
-            className="w-full cursor-pointer"
-            type="submit"
-          >
-            {isLoading ? "Loading..." : "Sign Up"}
+          <Button disabled={isLoading} className="w-full" type="submit">
+            {isLoading ? "Processing..." : "Reset Password"}
           </Button>
         </form>
       </Form>
       <div className="max-w-md mx-auto text-center">
         <p>
-          Already have an account ?
+          Already have an account?
           <Link
-            className="font-semibold text-primary drop-shadow-2xl"
+            className="font-semibold text-primary hover:underline ml-1"
             href="/login"
           >
-            {" "}
             Login
           </Link>
         </p>
@@ -192,4 +151,4 @@ const SignUp = () => {
   );
 };
 
-export default SignUp;
+export default ResetPassword;
