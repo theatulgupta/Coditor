@@ -66,7 +66,6 @@ const ResetPassword = () => {
     try {
       const token = searchParams.get("token");
       if (!token) {
-        // This is an additional safety check
         toast.error("Missing or invalid reset token.");
         setIsLoading(false);
         return;

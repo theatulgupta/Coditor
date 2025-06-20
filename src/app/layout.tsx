@@ -4,6 +4,7 @@ import type { Metadata } from "next";
 import { Alumni_Sans } from "next/font/google";
 import { Toaster } from "react-hot-toast";
 import "./globals.css";
+import Provider from "@/Provider/Provider";
 
 const alumniSans = Alumni_Sans({
   subsets: ["latin"],
@@ -25,7 +26,7 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body className={`${alumniSans.variable} antialiased font-sans`}>
-        {children}
+        <Provider>{children}</Provider>
         <Toaster position="bottom-right" />
       </body>
     </html>

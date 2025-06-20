@@ -6,6 +6,11 @@ export default withAuth(
     const token = req.nextauth.token;
     const { pathname } = req.nextUrl;
 
+    // Redirect logged-in users from "/" to "/dashboard"
+    if (token && pathname === "/") {
+      return NextResponse.redirect(new URL("/dashboard", req.url));
+    }
+
     // Redirect logged-in users away from auth pages
     if (token && (pathname === "/login" || pathname === "/signup")) {
       return NextResponse.redirect(new URL("/dashboard", req.url));
@@ -29,5 +34,5 @@ export default withAuth(
 );
 
 export const config = {
-  matcher: ["/dashboard", "/login", "/signup"],
+  matcher: ["/", "/dashboard", "/login", "/signup"],
 };

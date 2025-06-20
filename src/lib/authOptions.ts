@@ -13,33 +13,22 @@ export const authOptions: NextAuthOptions = {
         password: { label: "Password", type: "password" },
       },
       async authorize(credentials) {
-        if (!credentials?.email || !credentials?.password) {
-          throw new Error("Email and password are required");
-        }
+        const { email, password } = credentials ?? {};
+        if (!email || !password) return null;
 
         await connectDB();
 
-        const user = await User.findOne({ email: credentials.email });
+        const user = await User.findOne({ email });
+        if (!user) return null;
 
-        if (!user) {
-          // Optionally log or throw error for invalid login
-          return null;
-        }
-
-        const passwordMatches = await bcrypt.compare(
-          credentials.password,
-          user.password
-        );
-
-        if (!passwordMatches) {
-          // Optionally log or throw error for invalid login
-          return null;
-        }
+        const isValid = await bcrypt.compare(password, user.password);
+        if (!isValid) return null;
 
         return {
           id: user._id.toString(),
           email: user.email,
           name: user.name,
+          image: user.displayPicture || "",
         };
       },
     }),
